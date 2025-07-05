@@ -4,15 +4,15 @@ defmodule Streamer do
   """
 
   @doc """
-  Hello world.
+  Start streaming all trades of the passed symbol.
 
   ## Examples
 
-      iex> Streamer.hello()
+      iex> Streamer.start_streaming("xrpusdt")
       :world
 
   """
-  def hello do
-    :world
+  def start_streaming(symbol) do
+    Streamer.Binance.start_link(symbol)
   end
 end
