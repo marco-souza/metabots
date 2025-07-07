@@ -9,6 +9,10 @@
 # move said applications out of the umbrella.
 import Config
 
+if File.exists?("./secrets.exs") do
+  import_config("./secrets.exs")
+end
+
 config :logger,
   level: :debug,
   format: "$data $time [$level] $metadata$message\n"
