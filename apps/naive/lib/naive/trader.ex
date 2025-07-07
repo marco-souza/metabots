@@ -35,7 +35,12 @@ defmodule Naive.Trader do
   end
 
   defp fetch_tick_size(symbol) do
-    # TODO: implement fetch
-    symbol
+    Binance.get_exchange_info()
+    |> elem(1)
+    |> Map.get(:symbols)
+    |> Enum.find(&(&1["symbol"] == symbol))
+    |> Map.get("filters")
+    |> Enum.find(&(&1["filterType"] == "PRICE_FILTER"))
+    |> Map.get("tickSize")
   end
 end
