@@ -13,6 +13,7 @@ end
 defmodule Naive.Trader do
   alias Streamer.Binance.TradeEvent
   alias Decimal, as: D
+
   use GenServer
 
   require Logger

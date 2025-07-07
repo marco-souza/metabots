@@ -2,17 +2,19 @@ defmodule Naive do
   @moduledoc """
   Documentation for `Naive`.
   """
-  alias Streamer.Binance.TradeEvent
-
   @doc """
   Send a trade event
 
   ## Examples
 
-      iex> Naive.send_event(event)
+      iex> symbol = "pepeusdt"
+
+           Naive.Trader.start_link(%{symbol: symbol, profit_interval: "-0.01"})
+
+           Streamer.start_streaming(symbol)
 
   """
-  def send_event(%TradeEvent{} = event) do
+  def send_event(%Streamer.Binance.TradeEvent{} = event) do
     GenServer.cast(:trader, event)
   end
 end

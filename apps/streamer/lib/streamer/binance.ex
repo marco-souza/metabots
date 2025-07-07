@@ -1,5 +1,6 @@
 defmodule Streamer.Binance do
   require Logger
+
   use WebSockex
 
   @stream_endpoint "wss://stream.binance.com:9443/ws/"
