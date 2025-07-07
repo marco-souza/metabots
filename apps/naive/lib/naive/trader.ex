@@ -11,6 +11,7 @@ defmodule State do
 end
 
 defmodule Naive.Trader do
+  alias Streamer.Binance.TradeEvent
   use GenServer
 
   require Logger
@@ -32,6 +33,22 @@ defmodule Naive.Trader do
        profit_interval: profit_interval,
        tick_size: tick_size
      }}
+  end
+
+  # New Trader pattern
+  def handle_cast(
+        %TradeEvent{price: price},
+        %State{symbol: symbol, buy_order: nil} = state
+      ) do
+    # hardcoded until chapter 7
+    quantity = 100
+
+    Logger.info("Placing BUY order for #{symbol} @ #{price}, quantity: #{quantity}")
+
+    {:ok, %Binance.OrderResponse{} = order} =
+      Binance.order_limit_buy(symbol, quantity, price, "GTC")
+
+    {:noreply, %{state | buy_order: order}}
   end
 
   defp fetch_tick_size(symbol) do
