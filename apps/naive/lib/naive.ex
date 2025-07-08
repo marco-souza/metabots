@@ -7,10 +7,8 @@ defmodule Naive do
 
   ## Examples
 
-      iex> symbol = "pepeusdt"
-
+      iex> symbol = "dogeusdt"
            Naive.Trader.start_link(%{symbol: symbol, profit_interval: "-0.01"})
-
            Streamer.start_streaming(symbol)
 
   """
