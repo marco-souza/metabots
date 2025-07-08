@@ -34,10 +34,11 @@ defmodule Streamer.Binance do
       trade_id: event["t"],
       price: event["p"],
       quantity: event["q"],
-      buyer_order_id: event["b"],
-      seller_order_id: event["a"],
       trade_time: event["T"],
-      buyer_market_maker: event["m"]
+      buyer_market_maker: event["m"],
+      # FIXME: unavailable
+      buyer_order_id: event["b"],
+      seller_order_id: event["a"]
     }
 
     Logger.debug(
@@ -45,6 +46,11 @@ defmodule Streamer.Binance do
         "#{trade_event.symbol}@#{trade_event.price}"
     )
 
-    Naive.send_event(trade_event)
+    # publish event to trade events topic
+    Phoenix.PubSub.broadcast(
+      Streamer.PubSub,
+      "TRADE_EVENTS:#{trade_event.symbol}",
+      trade_event
+    )
   end
 end
