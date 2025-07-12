@@ -35,10 +35,10 @@ defmodule Streamer.Binance do
       price: event["p"],
       quantity: event["q"],
       trade_time: event["T"],
-      buyer_market_maker: event["m"],
-      # FIXME: unavailable
-      buyer_order_id: event["b"],
-      seller_order_id: event["a"]
+      buyer_market_maker: event["m"]
+      # FIXME: fields not available (binance update)
+      # buyer_order_id: event["b"],
+      # seller_order_id: event["a"],
     }
 
     Logger.debug(

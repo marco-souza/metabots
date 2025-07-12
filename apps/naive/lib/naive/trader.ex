@@ -56,20 +56,21 @@ defmodule Naive.Trader do
   # BUY is placed, Place SELL order
   def handle_info(
         %TradeEvent{
-          buyer_order_id: order_id,
-          quantity: quantity
+          quantity: quantity,
+          price: event_price
         },
         %State{
           symbol: symbol,
           buy_order: %Binance.OrderResponse{
             price: buy_price,
-            order_id: order_id,
             orig_qty: quantity
           },
           profit_interval: profit_interval,
-          tick_size: tick_size
+          tick_size: tick_size,
+          sell_order: nil
         } = state
-      ) do
+      )
+      when event_price <= buy_price do
     sell_price = calculate_sell_price(buy_price, profit_interval, tick_size)
 
     Logger.info(
@@ -86,16 +87,17 @@ defmodule Naive.Trader do
   # SELL is placed, trade finished
   def handle_info(
         %TradeEvent{
-          seller_order_id: order_id,
-          quantity: quantity
+          quantity: quantity,
+          price: event_price
         },
         %State{
           sell_order: %Binance.OrderResponse{
-            order_id: order_id,
-            orig_qty: quantity
+            orig_qty: quantity,
+            price: sell_price
           }
         } = state
-      ) do
+      )
+      when event_price >= sell_price do
     Logger.info("Trade finished at #{sell_price}, trader will now exit")
 
     {
