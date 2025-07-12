@@ -14,5 +14,5 @@ config :binance,
   secret_key: System.get_env("BINANCE_SECRET_KEY", "")
 
 config :logger,
-  level: :debug,
+  level: :info,
   format: "$data $time [$level] $metadata$message\n"
