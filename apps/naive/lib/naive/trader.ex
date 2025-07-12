@@ -29,13 +29,11 @@ defmodule Naive.Trader do
 
     Phoenix.PubSub.subscribe(Streamer.PubSub, "TRADE_EVENTS:#{symbol}")
 
-    tick_size = fetch_tick_size(symbol)
-
     {:ok,
      %State{
        symbol: symbol,
        profit_interval: profit_interval,
-       tick_size: tick_size
+       tick_size: fetch_tick_size(symbol)
      }}
   end
 
@@ -45,7 +43,7 @@ defmodule Naive.Trader do
         %State{symbol: symbol, buy_order: nil} = state
       ) do
     # FIXME: hardcoded until chapter 7
-    quantity = 100
+    quantity = 13
 
     Logger.info("Placing BUY order for #{symbol} @ #{price}, quantity: #{quantity}")
 
@@ -82,7 +80,7 @@ defmodule Naive.Trader do
     {:ok, %Binance.OrderResponse{} = order} =
       Binance.order_limit_sell(symbol, quantity, sell_price, "GTC")
 
-    {:noreplay, %{state | sell_order: order}}
+    {:noreply, %{state | sell_order: order}}
   end
 
   # SELL is placed, trade finished
@@ -98,8 +96,18 @@ defmodule Naive.Trader do
           }
         } = state
       ) do
-    Logger.info("Trade finished, trader will now exit")
-    {:stop, :normal, state}
+    Logger.info("Trade finished at #{sell_price}, trader will now exit")
+
+    {
+      :stop,
+      :normal,
+      # generate new state
+      %State{
+        symbol: state.symbol,
+        profit_interval: state.profit_interval,
+        tick_size: fetch_tick_size(state.symbol)
+      }
+    }
   end
 
   # Fallback scenario
