@@ -18,6 +18,14 @@ To get started, clone the repository and install dependencies using:
 mix deps.get
 ```
 
+```elixir
+
+# INFO: to test
+Streamer.start_streaming("xrpusdt")
+Naive.Trader.start_link(%{symbol: "XRPUSDT", profit_interval: "-0.001"})
+
+```
+
 For more details, refer to the official [Elixir documentation](https://elixir-lang.org/).
 
 ## License
