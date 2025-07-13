@@ -9,6 +9,9 @@
 # move said applications out of the umbrella.
 import Config
 
+config :naive,
+  binance_client: BinanceMock
+
 config :binance,
   api_key: System.get_env("BINANCE_API_KEY", ""),
   secret_key: System.get_env("BINANCE_SECRET_KEY", "")
